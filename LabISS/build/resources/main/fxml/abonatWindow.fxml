@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="481.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowsController.AbonatController">
+   <children>
+      <Label layoutX="224.0" layoutY="30.0" text="Meniu Abonat">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <ListView layoutX="46.0" layoutY="99.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView layoutX="348.0" layoutY="99.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="46.0" layoutY="72.0" text="Carti disponibile">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="348.0" layoutY="72.0" text="Carti imprumutate">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="354.0" layoutY="329.0" mnemonicParsing="false" text="Imprumuta" />
+      <Button layoutX="354.0" layoutY="372.0" mnemonicParsing="false" text="Returneaza" />
+      <Button layoutX="332.0" layoutY="413.0" mnemonicParsing="false" text="Prelungeste termen" />
+      <Button fx:id="logoutBtn" layoutX="521.0" layoutY="439.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
+      <TextField layoutX="108.0" layoutY="329.0" />
+      <TextField layoutX="108.0" layoutY="372.0" />
+      <TextField layoutX="108.0" layoutY="413.0" />
+      <Label layoutX="59.0" layoutY="333.0" text="Titlu :" />
+      <Label layoutX="16.0" layoutY="417.0" text="Cod exemplar :" />
+      <Label layoutX="56.0" layoutY="376.0" text="Autor :" />
+   </children>
+</AnchorPane>

@@ -13,11 +13,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Carte;
 import model.Utilizator;
+import observer.Observer;
 import services.Service;
 
 import java.io.IOException;
 
-public class BibliotecarController {
+public class BibliotecarController implements Observer {
     private Service service;
 
     @FXML
@@ -37,6 +38,7 @@ public class BibliotecarController {
 
     public void setCurrentUser(Utilizator currentUser) {
         this.currentUser = currentUser;
+        service.addObserver(this);
     }
 
 
@@ -121,6 +123,7 @@ public class BibliotecarController {
 
     @FXML
     public void logout(ActionEvent actionEvent) throws IOException {
+        service.removeObserver(this);
         Stage primaryStage = new Stage();
         primaryStage.setTitle("Biblioteca");
         FXMLLoader loader = new FXMLLoader();
@@ -135,5 +138,10 @@ public class BibliotecarController {
     public void setServer(Service server)
     {
         this.service = server;
+    }
+
+    @Override
+    public void update() {
+        loadTableCarti();
     }
 }

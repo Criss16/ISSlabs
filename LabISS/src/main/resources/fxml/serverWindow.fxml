@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="windowsController.ServerController">
+   <children>
+      <Button fx:id="DeschideClientBtn" layoutX="236.0" layoutY="200.0" mnemonicParsing="false" onAction="#deschideLogin" text="Deschide client">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Label fx:id="LabelBiblioteca" layoutX="197.0" layoutY="86.0" text="Server Biblioteca">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,23 +1,32 @@
 package services;
 
+import javafx.scene.control.Alert;
 import model.*;
+import observer.Observable;
+import observer.Observer;
 import repository.AbonatRepo;
 import repository.BibliotecarRepo;
 import repository.CarteRepo;
+import repository.ImprumutRepo;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class Service {
+public class Service implements Observable {
     private AbonatRepo abonatRepo;
     private BibliotecarRepo bibliotecarRepo;
     private CarteRepo carteRepo;
+    private ImprumutRepo imprumutRepo;
 
 
-    public Service(AbonatRepo abonatRepo, BibliotecarRepo bibliotecarRepo, CarteRepo carteRepo) {
+    public Service(AbonatRepo abonatRepo, BibliotecarRepo bibliotecarRepo, CarteRepo carteRepo, ImprumutRepo imprumutRepo) {
         this.abonatRepo = abonatRepo;
         this.bibliotecarRepo = bibliotecarRepo;
         this.carteRepo = carteRepo;
+        this.imprumutRepo = imprumutRepo;
     }
 
     public void register(String cnp, String nume, String adresa, String telefon, String parola, Integer codUser,Integer codAng, Integer nrImpr){
@@ -25,7 +34,7 @@ public class Service {
             if (codAng == -1)
             {
                 //creez abonat
-                Abonat abonat = new Abonat(cnp,nume,adresa,telefon,parola,codUser,0);
+                Abonat abonat = new Abonat(nume,cnp,adresa,telefon,parola,codUser,0);
                 if (abonatRepo.findByUserPass(codUser,parola) != null)
                     throw new Exception("Username deja existent!");
                 abonatRepo.add(abonat);
@@ -43,6 +52,11 @@ public class Service {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public Integer getUserId(Integer userCode, String password)
+    {
+        return abonatRepo.findByUserPass(userCode, password).getId();
     }
 
     public String login(Utilizator user) throws Exception {
@@ -68,6 +82,7 @@ public class Service {
         Carte carte = new Carte(titlu,autor,codEx,categorie,TipStare.disponibil,null);
         try{
             carteRepo.add(carte);
+            notifyObservers();
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -78,9 +93,95 @@ public class Service {
             Carte carte = new Carte();
             carte.setId(idCarte);
             carteRepo.delete(carte);
+            notifyObservers();
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public Iterable<Carte> getAllCartiDisponibile(){
+        return carteRepo.findAllDisponibil();
+    }
+
+    public Iterable<Carte> getAllCartiImprumutate(Integer abonat){
+        List<Carte> carti = new ArrayList<>();
+        for (Imprumut i : imprumutRepo.getAllByAbonat(abonat))
+        {
+            Carte carte = carteRepo.findById(i.getIdCarte());
+            if (carte.getStare() == TipStare.imprumutat && i.getDataReturnare() == null)
+                carti.add(carte);
+        }
+        return carti;
+    }
+
+    public void addImprumut(String titlu, String autor, Integer cod, Integer abonat) throws Exception
+    {
+        Carte carte = carteRepo.findByTitluAutorCod(titlu,autor,cod);
+        Integer idCarte;
+        if (carte == null || carte.getStare() == TipStare.imprumutat)
+            throw new Exception("Cartea nu poate fi imprumutata!");
+        else
+        {
+            idCarte = carte.getId();
+            Imprumut imprumut = new Imprumut(abonat,idCarte);
+            imprumutRepo.add(imprumut);
+            carte.setData(LocalDate.now());
+            carte.setStare(TipStare.imprumutat);
+            carteRepo.update(carte,idCarte);
+            notifyObservers();
+        }
+    }
+
+    public void returnareCarte(String titlu, String autor, Integer cod, Integer abonat) throws Exception {
+        Carte carte = carteRepo.findByTitluAutorCod(titlu,autor,cod);
+        Integer idCarte;
+        if (carte == null || carte.getStare() == TipStare.disponibil)
+            throw new Exception("Cartea nu poate fi returnata!");
+        else
+        {
+            idCarte = carte.getId();
+            Imprumut returnat = imprumutRepo.getByAbonatCarte(abonat,idCarte);
+            returnat.setDataReturnare(LocalDate.now().toString());
+            imprumutRepo.update(returnat);
+            carte.setData(LocalDate.now());
+            carte.setStare(TipStare.disponibil);
+            carteRepo.update(carte,idCarte);
+            notifyObservers();
+        }
+    }
+
+    public void prelungireTermen(String titlu, String autor, Integer cod) throws Exception {
+        Carte carte = carteRepo.findByTitluAutorCod(titlu,autor,cod);
+        Integer idCarte;
+        if (carte == null || carte.getStare() == TipStare.disponibil)
+            throw new Exception("Cartea nu poate avea termenul prelungit!");
+        else
+        {
+            idCarte = carte.getId();
+            carte.setData(carte.getData().plusWeeks(2));
+            carteRepo.update(carte,idCarte);
+            notifyObservers();
+        }
+    }
+
+
+    private List<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+        System.out.println(observers.size());
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        System.out.println(observers.size());
+        observers.forEach(Observer :: update);
     }
 }

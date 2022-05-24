@@ -1,6 +1,5 @@
 package services;
 
-import javafx.scene.control.Alert;
 import model.*;
 import observer.Observable;
 import observer.Observer;
@@ -9,10 +8,8 @@ import repository.BibliotecarRepo;
 import repository.CarteRepo;
 import repository.ImprumutRepo;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Service implements Observable {

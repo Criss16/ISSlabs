@@ -31,7 +31,7 @@ public class AbonatRepo {
         }
     }
 
-    public Abonat findById(Integer id) {
+    /*public Abonat findById(Integer id) {
         Connection con = dbUtils.getConnection();
         Abonat abonat = new Abonat();
         try(PreparedStatement preStmt = con.prepareStatement("select * from abonati where id_abonat=?")){
@@ -55,7 +55,7 @@ public class AbonatRepo {
             System.err.println("Error DB "+e);
         }
         return abonat;
-    }
+    }*/
 
     public Abonat findByUserPass(Integer cod,String pass) {
         Connection con = dbUtils.getConnection();

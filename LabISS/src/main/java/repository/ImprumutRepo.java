@@ -1,14 +1,10 @@
 package repository;
 
-import javafx.scene.control.Alert;
 import model.Imprumut;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
 
 public class ImprumutRepo {
     private SessionFactory sessionFactory;

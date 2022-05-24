@@ -32,7 +32,7 @@ public class BibliotecarRepo {
         }
     }
 
-    public Bibliotecar findById(Integer id) {
+    /*public Bibliotecar findById(Integer id) {
         Connection con = dbUtils.getConnection();
         Bibliotecar bibliotecar = new Bibliotecar();
         try(PreparedStatement preStmt = con.prepareStatement("select * from bibliotecari where id_bibliotecar=?")){
@@ -56,7 +56,7 @@ public class BibliotecarRepo {
             System.err.println("Error DB "+e);
         }
         return bibliotecar;
-    }
+    }*/
 
     public Bibliotecar findByUserPass(Integer cod,String pass) {
         Connection con = dbUtils.getConnection();
